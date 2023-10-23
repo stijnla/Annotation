@@ -38,18 +38,20 @@ def main2():
         # checking if it is a file
         if os.path.isfile(f) and (f.endswith('.jpg')):
             images.append(f)
-            values.append(int(f.replace('.jpg','')))
+            values.append(int(f.replace('.jpg','').replace(directory_path,'').replace('/','')))
 
     images = [i[1] for i in sorted(zip(values, images))]
-    num = 0 # resume annotation
+    processed_images = [f for f in os.listdir('processed') if os.path.isfile(os.path.join('processed', f)) and f.endswith('.jpg')]
+
+    num = len(processed_images) # resume annotation
     
     for i in range(len(images)):
         print(i+num) # +1 due to classes.txt
-        image = images[i+num+1]
+        image = images[i+num]
         name = str(i+num)
         new_annotation = Bounding_box_classification_annotation_tool(PATH_TO_MODEL, image, name, classes)
         new_annotation.annotate()
-        cv2.imwrite(name, cv2.imread(image))
+        cv2.imwrite(os.path.join('processed', name+'.jpg'), cv2.imread(image))
 
 
 if __name__ == '__main__':
