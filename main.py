@@ -23,13 +23,14 @@ def main():
     
 
 def main2():
-    directory_path = "captured_images"
+    directory_path = "captured_images/data"
+    classes_path = "captured_images"
     images = []
     values = []
     PATH_TO_MODEL = 'product_detection_weights.pt'
 
 
-    with open(os.path.join(directory_path, 'classes.txt')) as f:
+    with open(os.path.join(classes_path, 'classes.txt')) as f:
         classes = f.readlines()
     
     for filename in os.listdir(directory_path):
