@@ -61,14 +61,13 @@ class Bounding_box_classification_annotation_tool:
     def __init__(self, path_to_model, image, name, classes):
         # Load YOLO model trained for 10 epochs on SKU-110K-VS dataset
         self.model = YOLO(path_to_model)
-
         # Get all images that need annotation
         self.image = image
-
         self.classes = classes
         self.classified_bounding_boxes = []
-        self.selected_label = 0
-        
+        self.selected_label = 0    
+        print(self.image)
+        print(self.classes)  
         # load keyboard interpreter
         self.keyboard_interpreter = Keyboard_interpreter()
         self.undo = False
@@ -82,18 +81,17 @@ class Bounding_box_classification_annotation_tool:
         # resizee here as well
         cv2.waitKey(1)
 
+
     @staticmethod
     def update_bounding_box_screen(image, bounding_box):
-        cv2.imshow('Bounding Box Screen', cv2.resize(image[int(bounding_box[1]):int(bounding_box[3]), int(bounding_box[0]):int(bounding_box[2])], [3*(int(bounding_box[2]) - int(bounding_box[0])), 3*(int(bounding_box[3]) - int(bounding_box[1]))]))
+        #cv2.imshow('Bounding Box Screen', cv2.resize(image[int(bounding_box[1]):int(bounding_box[3]), int(bounding_box[0]):int(bounding_box[2])], [3*(int(bounding_box[2]) - int(bounding_box[0])), 3*(int(bounding_box[3]) - int(bounding_box[1]))]))
         # resize here as well
-        cv2.waitKey(1)
-    
-    def classify_bounding_box(self, image, bounding_box):
-        
+        #cv2.waitKey(1)
+        pass    
+
+    def classify_bounding_box(self, image, bounding_box):        
         image_with_current_bounding_box = cv2.imread(image)
         cv2.rectangle(image_with_current_bounding_box, (int(bounding_box[0]), int(bounding_box[1])), (int(bounding_box[2]), int(bounding_box[3])), (0,0,255), 2)
-        
-        
         self.update_image_screen(image_with_current_bounding_box)
         self.update_bounding_box_screen(cv2.imread(image), bounding_box)
         
@@ -101,10 +99,8 @@ class Bounding_box_classification_annotation_tool:
         if len(command) > 0:
             if command[0] == 'enter':
                 return self.selected_label, False
-
             if command[0] == 'c':
-                return None, False
-            
+                return None, False   
             if command[0] == 'right':
                 if self.selected_label < len(self.classes) - 1:
                     self.selected_label = self.selected_label + 1
@@ -117,13 +113,9 @@ class Bounding_box_classification_annotation_tool:
                     self.selected_label = self.selected_label - 1
             if command[0] == 'esc':
                 self.done = True
-
             if command[0] == 'z':
                 self.undo = True
-
         return None, True
-        
-
         
 
     def get_bounding_boxes_image(self, image):
@@ -133,33 +125,25 @@ class Bounding_box_classification_annotation_tool:
         # Get bounding boxes defined as (x, y, widht, height)
         bounding_boxes_normalized = results[0].boxes.xywhn
         bounding_boxes = results[0].boxes.xyxy
-
-
         return bounding_boxes.cpu().numpy(), bounding_boxes_normalized.cpu().numpy()
 
+
     def classify_bounding_boxes_image(self, image):
-        
-
         bounding_box_index = 0
-
-        while bounding_box_index < len(self.bounding_boxes_xyxy):
-            
+ 
+        while bounding_box_index < len(self.bounding_boxes_xyxy): 
             if self.done:
-                    break
-            
-            
-            
+                break          
+
             object_class_not_determined = True
             previous_selected_label = None
             while object_class_not_determined:
-
 
                 if previous_selected_label != self.selected_label:
                     print('                                                                           ', end='\r', flush=True)
                     print('selected label: "' + str(self.classes[self.selected_label]).replace('\n', '') + '"', end='\r', flush=True)
                 
                 bounding_box = self.bounding_boxes_xyxy[bounding_box_index]
-
                 label, object_class_not_determined = self.classify_bounding_box(image, bounding_box)
                 if self.undo:
                     if len(self.classified_bounding_boxes) > 0:
@@ -168,16 +152,11 @@ class Bounding_box_classification_annotation_tool:
                         self.undo = False
                     else:
                         self.undo = False
-
                 if self.done:
-                    break
-
-            
+                    break  
             self.classified_bounding_boxes.append(label)
             # annotate the next bounding box
             bounding_box_index = bounding_box_index + 1
-
-
 
 
     def inspect_image_with_bounding_boxes(self, image):
@@ -185,22 +164,19 @@ class Bounding_box_classification_annotation_tool:
         for bounding_box in self.bounding_boxes_xyxy:
             cv2.rectangle(image_with_all_bounding_boxes, (int(bounding_box[0]), int(bounding_box[1])), (int(bounding_box[2]), int(bounding_box[3])), (0,0,255), 2)
         
-
-
         command = self.keyboard_interpreter.get_command()
         if len(command) > 0 and command[0] == 'e':
             # edit image bounding boxes
             editing = True
-
             while editing:
                 editing = self.edit_image_bounding_boxes()
-
 
         if len(command) > 0 and command[0] == 'enter':
             return False
         
         self.update_image_screen(image_with_all_bounding_boxes)
         return True
+
 
     def edit_image_bounding_boxes(self):
         editing = True
@@ -209,9 +185,9 @@ class Bounding_box_classification_annotation_tool:
 
         # add the new bounding boxes to the bounding boxes
         if len(self.new_bounding_boxes) > 0:
-            self.bounding_boxes_xyxy = np.concatenate([self.new_bounding_boxes, self.bounding_boxes_xyxy])
-         
+            self.bounding_boxes_xyxy = np.concatenate([self.new_bounding_boxes, self.bounding_boxes_xyxy])       
         return editing
+
 
     def convert_xyxy_to_xywhn(self):
         image = cv2.imread(self.image)
@@ -227,7 +203,6 @@ class Bounding_box_classification_annotation_tool:
 
             bounding_box_xywhn = np.array([x_normalized, y_normalized, width_normalized, height_normalized])
             bounding_boxes_xywhn.append(bounding_box_xywhn)
-
         return np.array(bounding_boxes_xywhn, dtype=np.float32)
     
     
@@ -237,19 +212,15 @@ class Bounding_box_classification_annotation_tool:
         self.bounding_boxes_xyxy, self.bounding_boxes_xywh_normalized = self.get_bounding_boxes_image(self.image)
 
         inspecting = True
-
         while inspecting:
             inspecting = self.inspect_image_with_bounding_boxes(self.image)
-
         self.classify_bounding_boxes_image(self.image)
-        
         bounding_boxes_xywhn = self.convert_xyxy_to_xywhn()
         
         # convert to labels
         self.make_labels(bounding_boxes_xywhn)
         self.save_labels()
         #cv2.destroyAllWindows()
-
 
 
     def make_labels(self, bounding_boxes_xywhn):
@@ -267,7 +238,8 @@ class Bounding_box_classification_annotation_tool:
     def save_labels(self): 
         with open(os.path.join(os.path.dirname(__file__), 'labels', str(self.name) + '.txt'), 'w') as f:
             f.writelines(self.labels)
-            
+    
+           
     def contain_bounding_box_within_frame(self, x, y, image):
         # make sure bounding box stays within bounds
         # image shape openCV: (height, width, channels)
@@ -278,12 +250,11 @@ class Bounding_box_classification_annotation_tool:
         if y < 0:
             y = 0
         elif y > image.shape[0]:
-            y = image.shape[0]
-        
+            y = image.shape[0]    
         return x, y
 
+
     def annotate_bounding_box(self, event, mouse_x, mouse_y, flags, param):
- 
         # start drawing bounding box
         if event == cv2.EVENT_MBUTTONDOWN:
             self.drawing = True
@@ -303,18 +274,14 @@ class Bounding_box_classification_annotation_tool:
                 end_bbox_x, end_bbox_y = self.contain_bounding_box_within_frame(end_bbox_x, end_bbox_y, self.drawing_image)
 
         # stop drawing bounding box
-        if event == cv2.EVENT_MBUTTONUP:
-            
-            
+        if event == cv2.EVENT_MBUTTONUP:   
             end_bbox_x = mouse_x
             end_bbox_y = mouse_y
-
-            
+   
             # contain bounding box within frame
             end_bbox_x, end_bbox_y = self.contain_bounding_box_within_frame(end_bbox_x, end_bbox_y, self.drawing_image)
 
-            # save annotation
-            
+            # save annotation 
             if end_bbox_x > self.initial_bbox_x and end_bbox_y > self.initial_bbox_y:
                 new_bounding_box = np.array([self.initial_bbox_x, self.initial_bbox_y, end_bbox_x, end_bbox_y])
             elif end_bbox_x < self.initial_bbox_x and end_bbox_y > self.initial_bbox_y:
@@ -332,14 +299,16 @@ class Bounding_box_classification_annotation_tool:
             
         if self.drawing:
             self.draw_current_bounding_box(end_bbox_x, end_bbox_y)
-        
+
+
     def draw_new_bounding_boxes(self, new_bounding_boxes):
         for bounding_box in new_bounding_boxes:
             cv2.rectangle(self.drawing_image, (bounding_box[0], bounding_box[2]), (bounding_box[1], bounding_box[3]), (0,0,185), 1)
 
-    def draw_current_bounding_box(self, end_bbox_x, end_bbox_y):
-        
+
+    def draw_current_bounding_box(self, end_bbox_x, end_bbox_y):    
         cv2.rectangle(self.drawing_image, (self.initial_bbox_x, self.initial_bbox_y), (end_bbox_x, end_bbox_y), (0,0,255), 2)
+
 
     def draw_helper_lines(self, mouse_x, mouse_y, image):
         image_with_lines = cv2.imread(self.image)
@@ -350,8 +319,6 @@ class Bounding_box_classification_annotation_tool:
 
     def draw_new_bounding_box(self, editing):
         # Connect the mouse button to our callback function
-        
-
         self.drawing = False
         self.initial_bbox_x, self.initial_bbox_y = -1, -1
         self.draw_with_clear_view = False
@@ -360,11 +327,8 @@ class Bounding_box_classification_annotation_tool:
 
         # display the window
         while editing:            
-            self.update_image_screen(self.drawing_image)
-            
+            self.update_image_screen(self.drawing_image)        
             command = self.keyboard_interpreter.get_command()
-
             if len(command) > 0 and command[0] == 'esc':
-                editing = False
-        
+                editing = False 
         return editing

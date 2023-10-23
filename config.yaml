@@ -1,0 +1,34 @@
+path_to_datasets_directory: '..' # This is the relative path from this directory to your datasets directory storing the supermarket dataset
+path_to_the_to_be_annotated_dataset: '..' # This is the path to the data that has to be annotated, this directory should contain the images and a classes.txt file
+
+# EXAMPLE 1: 
+#
+#   path to datasets directory should be '..' in this case (quotes not necessary)
+#
+# - home directory
+#   - annotation
+#   - datasets
+#     - supermarket dataset
+#     - other dataset
+#     - ....
+#   - some other directory
+#     - some sub directory
+#   ...
+#
+#
+#
+#
+# EXAMPLE 2:
+# 
+#   path to dataset directory should be empty ('') in this case
+#
+# - home directory
+#   - annotation
+#     - datasets
+#       - supermarket dataset
+#       - other dataset
+#       - ....
+#   - some other directory
+#     - some sub directory
+#   ...
+#

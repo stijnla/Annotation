@@ -1,2 +1,6 @@
 __pycache__/
-dataset/
+datasets/
+raw_images/
+captured_images/
+*.zip
+labels/
