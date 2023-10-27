@@ -145,6 +145,13 @@ class Bounding_box_classification_annotation_tool:
                 
                 bounding_box = self.bounding_boxes_xyxy[bounding_box_index]
                 label, object_class_not_determined = self.classify_bounding_box(image, bounding_box)
+
+                ###################################################
+                ### TODO: just for 2nd dataset products!
+                if label != None:
+                    label = label + 36
+                ###################################################
+
                 if self.undo:
                     if len(self.classified_bounding_boxes) > 0:
                         bounding_box_index = bounding_box_index - 1

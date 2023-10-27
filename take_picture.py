@@ -37,7 +37,7 @@ class key_checker():
 key_check = key_checker()
 cap = cv2.VideoCapture(6)
 
-onlyfiles = [int(f.replace('.jpg','')) for f in os.listdir('captured_images') if os.path.isfile(os.path.join('captured_images', f))]
+onlyfiles = [int(f.replace('.jpg','')) for f in os.listdir('captured_images/data') if os.path.isfile(os.path.join('captured_images', f))]
 if onlyfiles != []:
     count = max(onlyfiles)
 else:
