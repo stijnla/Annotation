@@ -9,7 +9,9 @@ opencv
 numpy
 
 ## Setup
-Make sure to add your images to a 'data' folder inside the 'captured images' folder
+Make sure to add your images (your zip file) to the 'captured images' folder, and rename it to 'data'
+Also, install all dependencies
+Now you can run the main.py file
 
 ## Interface
 **First** step is to check / draw the bounding boxes. 
