@@ -1,6 +1,5 @@
 import os
 import cv2
-from manual_bbox_annotation import image_bounding_box_annotation, key_checker
 from bbox_class_annotation import Bounding_box_classification_annotation_tool
 
 
@@ -28,12 +27,13 @@ def main():
 
     num = len(processed_images) # resume annotation
     
-    for i in range(len(images)):
-        image = images[i+num]
-        name = str(i+num)
+    for i, image in enumerate(images):
+        if num>0:
+            image = images[i+num]
+        name = values[i+num]
         new_annotation = Bounding_box_classification_annotation_tool(PATH_TO_MODEL, image, name, classes)
         new_annotation.annotate()
-        cv2.imwrite(os.path.join('processed', name+'.jpg'), cv2.imread(image))
+        cv2.imwrite(os.path.join('processed', str(name)+'.jpg'), cv2.imread(image))
 
 
 if __name__ == '__main__':
