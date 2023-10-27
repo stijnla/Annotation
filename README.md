@@ -22,7 +22,7 @@ The two steps below can be repeated until you press 'enter' when all bounding bo
 
 
 The **second** step is to classify each bounding box
-Use the left and right arrows to switch between selected labels
+Use the left and right arrows to switch between selected labels, the selected label is visualized in the terminal
 Press 'enter' to label selected bounding box with the selected label
 Press 'c' to not assign a label (= faulty bounding box)
 Press 'z' to undo your previous label, if you made a mistake
