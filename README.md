@@ -12,10 +12,10 @@ numpy
 **First** step is to check / draw the bounding boxes. 
 A model is supplied that suggests bounding boxes.
 
-This can be repeated until you press 'enter' when all bounding boxes are visible (which means you are done and can go to the classification step!)
-Look at the results: press 'e' to edit
-When done, press 'esc'
-To draw a bounding box, press your middle mouse button (wheel). To zoom in, roll the middel mouse button (wheel)
+The two steps below can be repeated until you press 'enter' when all bounding boxes are visible (which means you are done and can go to the classification step!)
+ - Look at the results: press 'e' to edit
+ - When done or when you want to check, press 'esc'
+    To draw a bounding box, press your middle mouse button (wheel). To zoom in, roll the middel mouse button (wheel)
 
 
 The **second** step is to classify each bounding box
