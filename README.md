@@ -8,6 +8,9 @@ pynput
 opencv
 numpy
 
+## Setup
+Make sure to add your images to a 'data' folder inside the 'captured images' folder
+
 ## Interface
 **First** step is to check / draw the bounding boxes. 
 A model is supplied that suggests bounding boxes.
